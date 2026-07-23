@@ -2,7 +2,7 @@
 
 Tested on **Omarchy / Arch Linux**, kernel **7.0.0+ mainline** (the AMD ACP70 PX13 quirks landed in mainline 2026-03-16 and ship in 7.0). Distro-specific steps for **Fedora 44** are called out inline below — the script itself is distro-agnostic; only the package install and kernel steps differ.
 
-This was the first publicly-confirmed working speaker setup for this laptop — kernel side worked out of the box on 7.0, but the TAS2783 SmartAmp speaker calibration blobs are not yet in `linux-firmware`. They ship in the official ASUS Windows driver. [`extract-px13-tas2783-fw.sh`](extract-px13-tas2783-fw.sh) extracts your own copy, installs it, and configures WirePlumber.
+Based on the original write-up and extraction recipe by **[cryptob1](https://gist.github.com/cryptob1/f62aaf8517df2e540f447347f42c7a03)** — the first publicly-confirmed working speaker setup for this laptop. Kernel side worked out of the box on 7.0, but the TAS2783 SmartAmp speaker calibration blobs are not yet in `linux-firmware`. They ship in the official ASUS Windows driver. [`extract-px13-tas2783-fw.sh`](extract-px13-tas2783-fw.sh) extracts your own copy, installs it, and configures WirePlumber.
 
 If you're hitting `slave-tas2783 ... Direct firmware load for ... failed with error -2` in dmesg (the requested filename is `1714-1-0x8.bin` on kernel **7.1+**, or `1714-1-8.bin` on **7.0** — see [Why this is needed](#why-this-is-needed)) and `wpctl status` shows only **Dummy Output**, this is for you.
 
@@ -148,10 +148,14 @@ The `session.suspend-timeout-seconds = 0` rule above prevents most occurrences.
 
 ## References
 
+- Original gist this repo is based on (cryptob1): https://gist.github.com/cryptob1/f62aaf8517df2e540f447347f42c7a03
 - CachyOS issue documenting same hardware: https://github.com/CachyOS/linux-cachyos/issues/737
 - Mainline ACP70 PX13 patch series (Mark Brown, 2026-03-16): https://lkml.org/lkml/2026/3/16/1730
 - Driver source: https://github.com/torvalds/linux/blob/master/sound/soc/codecs/tas2783-sdw.c
 
----
+## Credits
 
-*Contributed by a Linux user who got tired of using bluetooth headphones. If you have working firmware blobs for related ASUS models (subsystem IDs near 0x1714), please open an MR against linux-firmware.*
+- **[cryptob1](https://gist.github.com/cryptob1/f62aaf8517df2e540f447347f42c7a03)** — original discovery, write-up, and firmware extraction recipe ("a Linux user who got tired of using bluetooth headphones").
+- This repo packages that work as a runnable script and adds: Fedora 44 instructions, kernel 7.1+ firmware naming (`1714-1-0x8.bin`), local-blob reuse, automatic SELinux relabeling, and automated WirePlumber configuration.
+
+If you have working firmware blobs for related ASUS models (subsystem IDs near 0x1714), please open an MR against linux-firmware.
